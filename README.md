@@ -1,2 +1,2 @@
 # SAE3
-Site web + base de données
+Interface web permettant l’administration de la base de données conçue pour l'occasion.
