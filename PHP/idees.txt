@@ -1,0 +1,5 @@
+insert : foreign key select
+securiser les saisies
+
+exporter une table en csv
+insert csv

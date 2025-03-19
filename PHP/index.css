@@ -1,0 +1,37 @@
+body {
+	background-color: grey;
+}
+header {
+	background-color: lightyellow;
+}
+nav {
+	background-color: lightgreen;
+	width: auto;
+	margin-left: 0px;
+	padding-right: 10px;
+}
+nav > ul {
+	list-style: none;
+}
+main {
+	background-color: lightblue;
+	display: flex;
+	flex-direction: row;
+}
+section {
+	background-color: purple;
+	width: 100%;
+}
+section > .table {
+	background-color: white;
+	width:fit-content;
+	block-size: fit-content;
+}
+footer {
+	background-color: lightpink;
+}
+
+li {
+	width: auto;
+	color: red;
+}
