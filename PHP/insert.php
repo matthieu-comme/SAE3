@@ -8,9 +8,11 @@ $idcom = connexoci("myparam");
 
 <head>
     <title>Insertion - Chris Kindle</title>
+    <link href="insert.css" rel="stylesheet">
 </head>
 
 <body>
+	<?php include('header.php'); ?>
     <main>
     <?php if (isset($_GET["table"])) {
         $requete = "SELECT * FROM " . $_GET["table"];
@@ -25,14 +27,20 @@ $idcom = connexoci("myparam");
         } else {
 
             $cols = getColsInfo($stid);
-            echoTable2D($stid);
+            //echoTable2D($stid);
             oci_free_statement($stid);
             ?>
 	    	<form method="GET" action="">
 	    	    <h1>Insert dans <?php echo $_GET["table"]; ?></h1>
-		    <?php foreach ($cols as $row) {
-          createInput($row);
-      } ?>                
+		 <?php 
+		    $fkarr = foreignKeys($idcom, $_GET['table']);
+      		foreach ($cols as $row) {
+      			if(isForeignKey($row['name'], $fkarr)) 
+      				createFKInput($row, $fkarr, $idcom);
+			else 
+				createInput($row);
+		}
+      	?>                
 		    <input type="submit" name="submit" value="Insert">
 		</form>
 		<?php

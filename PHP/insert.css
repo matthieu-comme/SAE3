@@ -1,0 +1,20 @@
+body {
+	background-color: grey;
+}
+header {
+	background-color: lightyellow;
+	display: flex;
+	flex-direction: row;
+}
+
+main {
+	background-color: lightblue;
+}
+section {
+	background-color: purple;
+	width: 100%;
+}
+
+footer {
+	background-color: lightpink;
+}

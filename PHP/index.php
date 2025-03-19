@@ -12,10 +12,7 @@ $idcom = connexoci("myparam");
 </head>
 
 <body>
-	<header>
-		<h1>Accueil</h1>
-	</header>
-	
+	<?php include('header.php'); ?>	
     	<main>
       		<nav>
 		<ul>	
@@ -27,15 +24,13 @@ $idcom = connexoci("myparam");
 		if(!$r) echo 'Erreur lors de l\'execution de la requête';
 		while ($row = oci_fetch_array($stid)) {
 			$name = $row[0];
-			$tablenames[] = $name;
-			// demander au prof si echo ou html en général
-			echo '<div class="nav_table">';
-			echo '<li>'.$name.'</li><ul class="options">'."\n";
-			echo '<li class="nav_insert"><a href="http://10.1.16.112/~matthieu.comme/SAE3/insert.php?table='.$name.'">Ajouter</a></li>';
-			echo '<li class="nav_update"><a href="http://10.1.16.112/~matthieu.comme/SAE3/update.php?table='.$name.'">Modifier</a></li>';
-			echo '<li class="nav_delete"><a href="http://10.1.16.112/~matthieu.comme/SAE3/delete.php?table='.$name.'">Supprimer</a></li></ul></div>';
-		}
-		?>
+			$tablenames[] = $name;?>
+			<div class="nav_table">
+			<li><?php echo $name?></li><ul class="options">
+			<li class="nav_insert"><a href="http://10.1.16.112/~matthieu.comme/SAE3/insert.php?table=<?php echo $name?>">Ajouter</a></li>
+			<li class="nav_update"><a href="http://10.1.16.112/~matthieu.comme/SAE3/update.php?table=<?php echo $name?>">Modifier</a></li>
+			<li class="nav_delete"><a href="http://10.1.16.112/~matthieu.comme/SAE3/delete.php?table=<?php echo $name?>">Supprimer</a></li></ul></div>
+		<?php } ?>		
        		</ul>
 	</nav>  
 	<section>
