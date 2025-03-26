@@ -1,7 +1,0 @@
-insert : foreign key select
-securiser les saisies
-remplacer page delete par une croix a coté du tuple dans index.
-pareil pour modifier ?
-
-exporter une table en csv
-insert csv
