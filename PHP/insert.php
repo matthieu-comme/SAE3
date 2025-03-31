@@ -15,7 +15,10 @@ $idcom = connexoci("inc/myparam");
 </head>
 
 <body>
-	<?php include('inc/header.php'); ?>
+	<?php include('inc/header.php'); 
+	echo hash('sha256', 'pipi').'<br>';
+	echo hash('sha256', 'papa')?>
+	
     <main>
     <nav>
     <form method="GET" action="">
@@ -48,17 +51,17 @@ $idcom = connexoci("inc/myparam");
     if(isset($_POST['submit']) && $_POST['submit'] == 'Insert') {
     	var_dump($_POST);
     	foreach($_POST as $key => $value) {
-    		$value = preg_replace("/[;']/",'', $value); // limiter les injections
-    		$key = preg_replace("/[;']/",'', $key);
-    		if($key == 'table') 
-    			$table = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
-    		else {
-		    	if($key != 'submit') {
-		    		$attr = filter_var($key, FILTER_SANITIZE_SPECIAL_CHARS);
-		    		$insert["$attr"] = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);	
+	    		$value = filterString($value);
+	    		$key = filterString($key);
+	    		if($key == 'table') 
+	    			$table = $value;
+	    		else {
+			    	if($key != 'submit') {
+			    		$attr = $key;
+			    		$insert["$attr"] =$value;	
+			    	}
 		    	}
-	    	}
-    	}
+	}
     	$attributs =implode(', ', array_keys($insert));
     	$valeurs =  "'" .implode("', '", $insert). "'";
     	$requete = 'INSERT INTO '.$table.' ('.$attributs.') VALUES ('.$valeurs.')';
@@ -75,7 +78,10 @@ $idcom = connexoci("inc/myparam");
                     $e = oci_error($stid);
                     displayError($e);
                 }
-                else echo 'Insertion réussie';
+                else {
+                	echo 'Insertion réussie';
+                	addHistorique($requete);
+                }
     } 
     
         if (isset($_GET["table"]) && strcasecmp(trim($_GET["table"]), 'lutin')) {

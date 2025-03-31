@@ -1,11 +1,11 @@
 <?php
-require('header.php');
+require('inc/header.php');
 if (isset($_POST['pseudo']) && isset($_POST['mdp'])) {
     if (empty($_POST['pseudo']) || empty($_POST['mdp']))
         $message = "Concentre toi chef, laisse pas de vide<br>";
     else {
-        require_once('connexoci.inc.php');
-        require_once('functions.php');
+        require_once('inc/connexoci.inc.php');
+        require_once('inc/functions.php');
         $idcom = connexoci("myparam");
         var_dump($idcom);
         $pseudo = htmlspecialchars($_POST['pseudo']);

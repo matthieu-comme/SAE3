@@ -1,21 +1,28 @@
 <?php
-function echoTable2D($stid) {	
-	echo '<table class=”sortable” border="1">';
+function echoTable2D($stid, $table) {	
+	echo '<table class=”sortable” border="1">'."\n";
 	$nb_col = oci_num_fields($stid);
-	echo '<thead><tr>';
+	echo "<thead>\n<tr>";
 	for ($i = 1; $i <= $nb_col; $i++) {
   		$nom = oci_field_name($stid, $i);
         		echo '<th>'. $nom.'</th>';
     	}
-    	echo '</tr></thead><tbody>';
+    	echo '<th>Modifier</th>';
+    	echo "\n</tr>\n</thead>\n<tbody>";
 	while ($row = oci_fetch_array($stid, OCI_ASSOC+OCI_RETURN_NULLS)) {
-		echo "<tr>\n";
-		foreach ($row as $item) 
-			echo "<td>" . ($item !== null ? htmlentities($item, ENT_QUOTES) : "") . "</td>\n";
+		echo "<tr>";
+		foreach ($row as $key => $value) {
+			echo "<td>" . ($value !== null ? htmlentities($value, ENT_QUOTES) : "") . "</td>";
+			$lien[] = "$key=$value";
+		}
+		$s = implode('&', $lien);
+		unset($lien);
+		echo '<td><a href="update.php?table='.$table.'&'.$s.'">Modifier</a></td>';
 		echo "</tr>\n";
 	}
-	echo '</tbody></table>';
+	echo "</tbody>\n</table>\n";
 }
+
 function echoDeleteTable($stid) {	
 	echo '<table class=”” border="1">';
 	$nb_col = oci_num_fields($stid);
@@ -58,15 +65,14 @@ function getKeys($idcom, $requete) {
         	return $arr;
 }
 function getPrimaryKeys($idcom, $table) {
-	$requete = "SELECT cols.column_name FROM all_constraints cons, all_cons_columns cols WHERE cols.table_name = '".$table."' AND cons.constraint_type = 'P' AND cons.constraint_name = cols.constraint_name AND cons.owner = cols.owner ORDER BY cols.table_name, cols.position";
+	$requete = "SELECT cols.column_name FROM all_constraints cons, all_cons_columns cols WHERE cols.table_name = '".strtoupper($table)."' AND cons.constraint_type = 'P' AND cons.constraint_name = cols.constraint_name AND cons.owner = cols.owner ORDER BY cols.table_name, cols.position";
 	$arr = getKeys($idcom, $requete);
 	return $arr['COLUMN_NAME'];
 }
+
 function getForeignKeys($idcom, $table) {
-	$requete = "SELECT UCC2.COLUMN_NAME AS FK, UCC.TABLE_NAME, UCC.COLUMN_NAME FROM (SELECT TABLE_NAME, CONSTRAINT_NAME, R_CONSTRAINT_NAME, CONSTRAINT_TYPE FROM USER_CONSTRAINTS) UC,       (SELECT TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME FROM USER_CONS_COLUMNS) UCC, (SELECT TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME FROM USER_CONS_COLUMNS) UCC2 WHERE UC.R_CONSTRAINT_NAME = UCC.CONSTRAINT_NAME AND UC.CONSTRAINT_NAME = UCC2.CONSTRAINT_NAME AND uc.constraint_type = 'R' AND UC.TABLE_NAME = '$table'";
-	return getKeys($idcom, $requete);
-	
-        		
+	$requete = "SELECT UCC2.COLUMN_NAME AS FK, UCC.TABLE_NAME, UCC.COLUMN_NAME FROM (SELECT TABLE_NAME, CONSTRAINT_NAME, R_CONSTRAINT_NAME, CONSTRAINT_TYPE FROM USER_CONSTRAINTS) UC,       (SELECT TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME FROM USER_CONS_COLUMNS) UCC, (SELECT TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME FROM USER_CONS_COLUMNS) UCC2 WHERE UC.R_CONSTRAINT_NAME = UCC.CONSTRAINT_NAME AND UC.CONSTRAINT_NAME = UCC2.CONSTRAINT_NAME AND uc.constraint_type = 'R' AND UC.TABLE_NAME = '".strtoupper($table)."'";
+	return getKeys($idcom, $requete);       		
 }
 
 function checkConstraints($idcom, $table) { // sauf not null
@@ -106,7 +112,7 @@ function createInput($row) // row = une ligne du tableau cols
 			echo ' (date) <input type="date" name="'.$name.'">';
 			break;
 	}
-	echo "<br>";
+	echo "<br>\n";
 }
 
 function createFKInput($row, $fkarr, $idcom) {
@@ -131,15 +137,54 @@ function createFKInput($row, $fkarr, $idcom) {
         	while ($row = oci_fetch_array($stid)) {
 		echo '<option>'.$row[0].'</option>';
 	}
-	echo '</select><br>';
+	echo "</select><br>\n";
 }
 function displayError($e) {
-	$msg = $e['message'];
-	/*if(preg_match('/\.PK_/', $msg)) echo "Un tuple existe déjà avec cette clé primaire";
-	else echo $msg.'<br>';
-	*/	
+	$msg = $e['message'];	
 	$arr = preg_split('/[:(]/', trim($msg));
 	$s = preg_replace('/".*"\./','', $arr[1]);
 	echo $s;
 	
+}
+function filterString($s) {
+	$s = preg_replace("/[;']/",'', $s);
+	$s = filter_var($s, FILTER_SANITIZE_SPECIAL_CHARS);
+	return $s;
+}
+function filterArray($arr) {
+	foreach($arr as $key => $value) {
+		$key = filterString($key);
+		$value = filterString($value);
+		$res["$key"] = $value;
+	}
+	return $res;
+}
+function addHistorique($requete) {
+	if (!file_exists("historique.txt")) {
+	echo "Je ne trouve pas l'historique...";
+	return;
+	}
+	$fichier = fopen("historique.txt","a");
+	if ($fichier == null) {
+		echo "erreur lors de l'ouverture du fichier en mode 'a'";
+		return;
+	}
+	if(!flock($fichier,2)) {
+		echo "erreur de verrouillage mode 2";
+		return;
+	}
+	$ligne = date("Y-m-d H:i:s").';PSEUDO_LUTIN;'. $requete."\n";
+	if(!fwrite($fichier, $ligne)) {
+		echo "erreur lors de l'ecriture";
+		return;
+	}
+
+	if(!flock($fichier,3)) {
+		echo "erreur de deverrouillage";
+		return;
+	}
+	if(!fclose($fichier)) {
+		echo "erreur lors de la fermeture du fichier";
+		return;
+	}
 }

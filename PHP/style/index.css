@@ -14,12 +14,12 @@ nav > ul {
 	list-style: none;
 }
 main {
-	background-color: lightblue;
+	background-color: purple;
 	display: flex;
 	flex-direction: row;
 }
 section {
-	background-color: purple;
+	background-color: lightblue;
 	width: 100%;
 }
 section > .table {

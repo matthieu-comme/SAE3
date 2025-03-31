@@ -1,7 +1,33 @@
 <?php
-require_once('connexoci.inc.php');
-require_once('functions.php');
-$idcom = connexoci("myparam");
+require_once('inc/connexoci.inc.php');
+require_once('inc/functions.php');
+$idcom = connexoci("inc/myparam");
+
+if(isset($_GET['table'])) {
+	$arr = filterArray($_GET);
+	$table = $arr['table'];
+	unset($arr['table']);
+	$pkarray = getPrimaryKeys($idcom, $table);
+	foreach($pkarray as $key)
+		$where[]="$key='$arr[$key]'";
+	$whereString = implode(' AND ', $where);
+	//echo $whereString;
+	//var_dump($pkarray);
+}
+if(isset($_POST['table'])) {
+	$_POST = filterArray($_POST);
+	$table = $_POST['table'];
+	unset($_POST['table']);
+
+	foreach($_POST as $key => $value) {
+		if($value)
+			$updatearray[] = "$key='$value'";
+	}
+	$s = implode(', ', $updatearray);
+	$requete = 'UPDATE '.$table.' SET '. $s . ' WHERE '.$whereString ;
+	echo $requete;
+	var_dump($_POST);
+}
 ?>
  
 <html>
@@ -11,35 +37,23 @@ $idcom = connexoci("myparam");
 </head>
 
 <body>
+	<?php include('inc/header.php'); ?>	
     <main>
-    	<?php if (isset($_GET['table'])) { 
-    	$requete = "SELECT * FROM ".$_GET['table'];
-       	$stid = oci_parse($idcom, $requete);
-        	if(!$stid) echo 'Erreur lors de la préparation de requête';
-       	$r = oci_execute($stid);
-       	if(!$r) echo 'Erreur lors de l\'execution de la requête';$_GET['table'];
-	$cols = getColsInfo($stid);
-    	echoTable2D($stid);
-    	oci_free_statement($stid); ?>
-    	<h1>Update dans <?php echo $_GET['table'] ?></h1>
-    	<form method="GET" action="">
-                <?php foreach($cols as $row) createInput($row); ?>                
-                <input type="submit" name="submit" value="Insert">
-            </form>
-            <?php } ?>
-            <form method="GET" action="">
-                <h3>Choix de la table</h3>
-                <select name="table">
-                <?php 
-           		$requete = "SELECT table_name FROM user_tables ORDER BY table_name";
-		$stid = oci_parse($idcom, $requete);
-		if(!$stid) echo 'Erreur lors de la préparation de requête';
-		$r = oci_execute($stid);
-		if(!$r) echo 'Erreur lors de l\'execution de la requête';while ($row = oci_fetch_array($stid)) echo "<option value='".$row[0]."'>".$row[0]."</option>"; ?>
-                </select>
-                <input type="submit" name="submit" value="Choisir">
-            </form>
-        </div>
+	<form method="POST" action="">
+	<input type="hidden" name="table" value="<?php echo $table; ?>">
+	<?php
+	foreach($arr as $key => $value) {		
+		if(in_array($key, $pkarray)) {
+			echo "<p><strong>$key : $value</strong></p>";
+		}
+		else {
+			echo '<label for="'.$key.'">'.$key.': </label>';
+			echo '<input type=text name="'.$key.'"placeholder="'.$value.'"><br>';
+		}
+	}
+	?>
+	<input type="submit" name="" value="Modifier">
+	</form>
     </main>
 </body>
 

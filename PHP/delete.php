@@ -65,7 +65,10 @@ $idcom = connexoci("inc/myparam");
                     $e = oci_error($stid);
                     displayError($e);
                 }
-                else echo 'Suppression réussie';
+                else {
+                	echo 'Suppression réussie';
+                	addHistorique($requete);
+               }
     } 
     
   if (isset($_GET["table"]) && strcasecmp(trim($_GET["table"]), 'lutin')) {
@@ -84,7 +87,7 @@ $idcom = connexoci("inc/myparam");
         	$pkarr = getPrimaryKeys($idcom, $table);
 
         	
-        	$cols = getColsInfo($stid);
+        	//$cols = getColsInfo($stid);
             //oci_free_statement($stid);
             ?>
 	    	<form method="POST" action="" onsubmit="return confirm('Voulez-vous vraiment supprimer ce tuple ?');">
@@ -96,7 +99,7 @@ $idcom = connexoci("inc/myparam");
 		 	$pk = ''; 
 		 	foreach ($row as $key => $value) {
 
-		 		if (in_array($key, $pkarr)) {
+		 		if (in_array($key, $pkarr)) { // si l'attribut est la clé primaire
 		 			$pk = $pk . $value;
 		 		}
 		 		$label = $label . ' - ' . $value; 

@@ -8,7 +8,7 @@ $idcom = connexoci("inc/myparam");
 
 <head>
     <title>Accueil - Chris Kindle</title>
-     <link href="style/index.css" rel="stylesheet">    
+     <link href="style/index.css" rel="stylesheet"> 
 </head>
 
 <body>
@@ -41,8 +41,8 @@ $idcom = connexoci("inc/myparam");
 			if(!$stid) echo 'Erreur lors de la préparation de requête';
 			$r = oci_execute($stid);
 			if(!$r) echo 'Erreur lors de l\'execution de la requête';
-			echo '<div class="table" id="'.$table.'">';
-			echoTable2D($stid);
+			echo '<div class="table" id="'.$table.'">'."\n";
+			echoTable2D($stid, $table);
 			echo '</div>';
    	 	}
    	 	?>
