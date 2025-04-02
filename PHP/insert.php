@@ -6,7 +6,7 @@ require_once('inc/connexoci.inc.php');
 require_once('inc/functions.php');
 $idcom = connexoci("inc/myparam");
 ?>
- 
+ <!DOCTYPE HTML>
 <html>
 
 <head>
@@ -58,12 +58,15 @@ $idcom = connexoci("inc/myparam");
 	    		else {
 			    	if($key != 'submit') {
 			    		$attr = $key;
-			    		$insert["$attr"] =$value;	
+			    		if(str_contains($key, 'DATE')) // si le champ est une date
+			    			$insert["$attr"] = "TO_DATE('$value', 'YYYY-MM-DD')";
+			    		else
+			    			$insert["$attr"] = "'$value'";	
 			    	}
 		    	}
 	}
     	$attributs =implode(', ', array_keys($insert));
-    	$valeurs =  "'" .implode("', '", $insert). "'";
+    	$valeurs =  implode(", ", $insert);
     	$requete = 'INSERT INTO '.$table.' ('.$attributs.') VALUES ('.$valeurs.')';
     	echo $requete.'<br>';
     	$stid = oci_parse($idcom, $requete);

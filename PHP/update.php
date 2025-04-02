@@ -1,4 +1,5 @@
 <?php
+require_once('inc/login.inc.php');
 require_once('inc/connexoci.inc.php');
 require_once('inc/functions.php');
 $idcom = connexoci("inc/myparam");
@@ -25,11 +26,28 @@ if(isset($_POST['table'])) {
 	}
 	$s = implode(', ', $updatearray);
 	$requete = 'UPDATE '.$table.' SET '. $s . ' WHERE '.$whereString ;
+	//var_dump($_POST);
 	echo $requete;
-	var_dump($_POST);
+	$stid = oci_parse($idcom, $requete);
+                if (!$stid) {
+                    echo "Erreur lors de la préparation de requête";
+                    $e = oci_error();
+                    displayError($e);
+                }
+                $r = oci_execute($stid);
+                if (!$r) {
+                    echo 'Erreur lors de l\'execution de la requête : ';
+                    $e = oci_error($stid);
+                    displayError($e);
+                }
+                else {
+                	echo 'Modification réussie';
+                	addHistorique($requete);
+               }
 }
+
 ?>
- 
+<!DOCTYPE HTML>
 <html>
 
 <head>

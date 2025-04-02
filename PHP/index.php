@@ -1,4 +1,5 @@
 <?php
+require_once('inc/login.inc.php');
 require_once('inc/connexoci.inc.php');
 require_once('inc/functions.php');
 $idcom = connexoci("inc/myparam");
@@ -17,7 +18,7 @@ $idcom = connexoci("inc/myparam");
       		<nav>
 		<ul>	
        		<?php 
-	           	$requete = "SELECT table_name FROM user_tables ORDER BY table_name";
+	           	$requete = "SELECT table_name FROM user_tables WHERE UPPER(table_name) <> 'LUTIN' ORDER BY table_name";
 		$stid = oci_parse($idcom, $requete);
 		if(!$stid) echo 'Erreur lors de la préparation de requête';
 		$r = oci_execute($stid);
@@ -28,7 +29,6 @@ $idcom = connexoci("inc/myparam");
 			<div class="nav_table">
 			<li><?php echo $name?></li><ul class="options">
 			<li class="nav_insert"><a href="http://10.1.16.112/~matthieu.comme/SAE3/insert.php?table=<?php echo $name?>">Ajouter</a></li>
-			<li class="nav_update"><a href="http://10.1.16.112/~matthieu.comme/SAE3/update.php?table=<?php echo $name?>">Modifier</a></li>
 			<li class="nav_delete"><a href="http://10.1.16.112/~matthieu.comme/SAE3/delete.php?table=<?php echo $name?>">Supprimer</a></li></ul></div>
 		<?php } ?>		
        		</ul>

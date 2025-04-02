@@ -1,10 +1,11 @@
 <?php
 // securiser la suppression
+require_once('inc/login.inc.php');
 require_once('inc/connexoci.inc.php');
 require_once('inc/functions.php');
 $idcom = connexoci("inc/myparam");
 ?>
- 
+<!DOCTYPE HTML>
 <html>
 
 <head>
@@ -50,7 +51,7 @@ $idcom = connexoci("inc/myparam");
 	$table = $_POST['table'];
 	$pkname = $_POST['pkname'];
 	$pkdelete = $_POST['pkdelete'];
-    	$requete = 'DELETE FROM '.$table.' WHERE '. $pkname[0] . ' = '.$pkdelete ;
+    	$requete = 'DELETE FROM '.$table.' WHERE '. $pkname[0] . ' = '."'$pkdelete'" ;
     	echo $requete.'<br>';
 
     	$stid = oci_parse($idcom, $requete);

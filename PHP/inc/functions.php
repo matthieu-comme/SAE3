@@ -97,19 +97,20 @@ function createInput($row) // row = une ligne du tableau cols
 {
 	$name = $row['name'];
 	$size = $row['size'];
-	echo '<label for="'.$name.'">'.$name.'</label>';
-	switch($row['type']) {
+	$type = $row['type'];
+	echo '<label for="'.$name.'">'."$type longueur=$size $name : ".'</label>';
+	switch($type) {
 		case 'NUMBER':
-			echo ' (nombre) <input type="number" name="'.$name.'">';			
+			echo '<input type="number" name="'.$name.'">';			
 			break;
 		case 'VARCHAR2':
-			echo ' (varchar) <input type="text" name="'.$name.'" pattern=".{0,'.$size.'}">';
+			echo '<input type="text" name="'.$name.'" pattern=".{0,'.$size.'}">';
 			break;
 		case 'CHAR':
-			echo ' (char) <input type="text" name="'.$name.'" pattern=".{'.$size.'}">';
+			echo '<input type="text" name="'.$name.'" pattern=".{'.$size.'}">';
 			break;
 		case 'DATE':
-			echo ' (date) <input type="date" name="'.$name.'">';
+			echo '<input type="date" name="'.$name.'">';
 			break;
 	}
 	echo "<br>\n";
@@ -133,14 +134,15 @@ function createFKInput($row, $fkarr, $idcom) {
         	}
         	echo '<label for="'.$name.'">'.$name.'</label>';
         	echo '<select name="'.$name.'">';
-        	echo '<option></option>';
+        	echo "<option></option>\n";
         	while ($row = oci_fetch_array($stid)) {
-		echo '<option>'.$row[0].'</option>';
+		echo '<option>'.$row[0]."</option>\n";
 	}
 	echo "</select><br>\n";
 }
 function displayError($e) {
-	$msg = $e['message'];	
+	$msg = $e['message'];
+	var_dump($msg);
 	$arr = preg_split('/[:(]/', trim($msg));
 	$s = preg_replace('/".*"\./','', $arr[1]);
 	echo $s;

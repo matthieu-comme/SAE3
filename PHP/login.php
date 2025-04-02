@@ -1,5 +1,4 @@
 <?php
-require('inc/header.php');
 if (isset($_POST['pseudo']) && isset($_POST['mdp'])) {
     if (empty($_POST['pseudo']) || empty($_POST['mdp']))
         $message = "Concentre toi chef, laisse pas de vide<br>";
@@ -8,8 +7,8 @@ if (isset($_POST['pseudo']) && isset($_POST['mdp'])) {
         require_once('inc/functions.php');
         $idcom = connexoci("myparam");
         var_dump($idcom);
-        $pseudo = htmlspecialchars($_POST['pseudo']);
-        $mdp = htmlspecialchars($_POST['mdp']);
+        $pseudo = filterString($_POST['pseudo']);
+        $mdp = filterString($_POST['mdp']);
         $requete = "SELECT * FROM Lutin WHERE pseudo = '".$pseudo."'";
         echo $requete.'<br>';
         $stid = oci_parse($idcom, $requete);
@@ -17,16 +16,11 @@ if (isset($_POST['pseudo']) && isset($_POST['mdp'])) {
         $r = oci_execute($stid);
         var_dump($r);
         if(!$r) echo 'Erreur lors de l\'execution de la requête';
-
-        if (oci_num_fields($stid)== 0) // RETIRER CA CAR PERTE DE SECURITE
-            $message =  "<strong>Pseudo incorrect</strong><br>";
-        else {
             $message = "";
             $result = oci_fetch_array($stid, OCI_ASSOC+OCI_RETURN_NULLS);
             if ($result['pseudo'] !== $pseudo) $message .=  "<strong>Pseudo incorrect (casse)</strong><br>";
             else if ($result['mdp'] !== $mdp) $message .=  "<strong>Mot de passe incorrect</strong>";
-            else $message = "Je te connais, " . $pseudo; // rediriger en ouvrant une session et affecter les variables
-        }
+            else $message = "Je te connais, " . $pseudo; // rediriger en ouvrant une session et affecter les variables      
     }
 } ?>
  
