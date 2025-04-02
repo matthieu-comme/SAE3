@@ -12,8 +12,6 @@ if(isset($_GET['table'])) {
 	foreach($pkarray as $key)
 		$where[]="$key='$arr[$key]'";
 	$whereString = implode(' AND ', $where);
-	//echo $whereString;
-	//var_dump($pkarray);
 }
 if(isset($_POST['table'])) {
 	$_POST = filterArray($_POST);
@@ -26,8 +24,6 @@ if(isset($_POST['table'])) {
 	}
 	$s = implode(', ', $updatearray);
 	$requete = 'UPDATE '.$table.' SET '. $s . ' WHERE '.$whereString ;
-	//var_dump($_POST);
-	echo $requete;
 	$stid = oci_parse($idcom, $requete);
                 if (!$stid) {
                     echo "Erreur lors de la préparation de requête";
@@ -41,8 +37,9 @@ if(isset($_POST['table'])) {
                     displayError($e);
                 }
                 else {
-                	echo 'Modification réussie';
                 	addHistorique($requete);
+                	echo "<script>alert('Modification réussie')";
+                	echo "window.location.href = 'index.php';</script>";
                }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// securiser la suppression
+// securiser la suppression quand 2 clés primaires
 require_once('inc/login.inc.php');
 require_once('inc/connexoci.inc.php');
 require_once('inc/functions.php');

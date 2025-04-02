@@ -17,7 +17,7 @@ function echoTable2D($stid, $table) {
 		}
 		$s = implode('&', $lien);
 		unset($lien);
-		echo '<td><a href="update.php?table='.$table.'&'.$s.'">Modifier</a></td>';
+		echo '<td><a href="update.php?table='.$table.'&'.$s.'"><i class="fa fa-pencil"></i></a></td>';
 		echo "</tr>\n";
 	}
 	echo "</tbody>\n</table>\n";
@@ -161,7 +161,7 @@ function filterArray($arr) {
 	}
 	return $res;
 }
-function addHistorique($requete) {
+function addHistorique($requete, $pseudo) {
 	if (!file_exists("historique.txt")) {
 	echo "Je ne trouve pas l'historique...";
 	return;
@@ -175,7 +175,7 @@ function addHistorique($requete) {
 		echo "erreur de verrouillage mode 2";
 		return;
 	}
-	$ligne = date("Y-m-d H:i:s").';PSEUDO_LUTIN;'. $requete."\n";
+	$ligne = date("Y-m-d H:i:s").';'.$pseudo.';'. $requete."\n";
 	if(!fwrite($fichier, $ligne)) {
 		echo "erreur lors de l'ecriture";
 		return;
@@ -190,3 +190,7 @@ function addHistorique($requete) {
 		return;
 	}
 }
+
+
+
+

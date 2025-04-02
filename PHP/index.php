@@ -9,7 +9,8 @@ $idcom = connexoci("inc/myparam");
 
 <head>
     <title>Accueil - Chris Kindle</title>
-     <link href="style/index.css" rel="stylesheet"> 
+     <link href="style/gpt.css" rel="stylesheet"> 
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -42,6 +43,8 @@ $idcom = connexoci("inc/myparam");
 			$r = oci_execute($stid);
 			if(!$r) echo 'Erreur lors de l\'execution de la requête';
 			echo '<div class="table" id="'.$table.'">'."\n";
+			echo '<input class="searchInput" data-table-id="'.$table.'" type="search" placeholder="Rechercher" aria-label="Search"
+    aria-target="'.$table.'">';
 			echoTable2D($stid, $table);
 			echo '</div>';
    	 	}

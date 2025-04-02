@@ -46,11 +46,18 @@ nav a {
     font-weight: bold;
 }
 
-nav a:hover {
-    background: #1abc9c;
+.nav_insert a:hover {
+    background-color: #4CAF50;
     padding: 5px;
     border-radius: 4px;
 }
+
+.nav_delete a:hover {
+    background-color: #e57373;
+    padding: 5px;
+    border-radius: 4px;
+}
+
 
 /* Tables */
 table {
@@ -101,7 +108,7 @@ footer {
     margin-top: 20px;
     border-radius: 8px;
 }
-
+/*
 .options {
     display: none;
     opacity: 0;
@@ -114,5 +121,5 @@ footer {
     opacity: 1;
     transform: translateY(0);
 }
-
+*/
 
