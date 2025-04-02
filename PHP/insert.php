@@ -1,7 +1,7 @@
 <?php
 
 // fonction connexion et gestion d'erreurs
-
+require_once('inc/login.inc.php');
 require_once('inc/connexoci.inc.php');
 require_once('inc/functions.php');
 $idcom = connexoci("inc/myparam");
@@ -16,8 +16,8 @@ $idcom = connexoci("inc/myparam");
 
 <body>
 	<?php include('inc/header.php'); 
-	echo hash('sha256', 'pipi').'<br>';
-	echo hash('sha256', 'papa')?>
+	echo hash('sha256', 'MDP1').'<br>';
+	echo hash('sha256', 'MDP2')?>
 	
     <main>
     <nav>
@@ -83,7 +83,7 @@ $idcom = connexoci("inc/myparam");
                 }
                 else {
                 	echo 'Insertion réussie';
-                	addHistorique($requete);
+                	addHistorique($requete, $_SESSION['pseudo']);
                 }
     } 
     
