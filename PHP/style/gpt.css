@@ -1,0 +1,118 @@
+/* Style général */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+main {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+nav {
+    width: 250px;
+    background: #34495e;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    color: white;
+}
+.nav_insert {
+	background-color: green;
+}
+.nav_delete {
+	background-color: red;
+}
+
+nav li {
+    padding: 10px;
+    background: #2c3e50;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+nav a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+nav a:hover {
+    background: #1abc9c;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #3498db;
+    color: white;
+}
+
+td a {
+    color: #e74c3c;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+td a:hover {
+    text-decoration: underline;
+}
+
+/* Recherche */
+.searchInput {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 15px;
+    background: #2c3e50;
+    color: white;
+    margin-top: 20px;
+    border-radius: 8px;
+}
+
+.options {
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.nav_table:hover .options {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
