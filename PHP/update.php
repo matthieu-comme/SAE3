@@ -9,10 +9,12 @@ if(isset($_GET['table'])) {
 	$table = $arr['table'];
 	unset($arr['table']);
 	$pkarray = getPrimaryKeys($idcom, $table);
+	if(!$pkarray) header('Location: index.php');
 	foreach($pkarray as $key)
 		$where[]="$key='$arr[$key]'";
 	$whereString = implode(' AND ', $where);
 }
+else header('Location: index.php');
 if(isset($_POST['table'])) {
 	$_POST = filterArray($_POST);
 	$table = $_POST['table'];
@@ -38,8 +40,8 @@ if(isset($_POST['table'])) {
                 }
                 else {
                 	addHistorique($requete);
-                	echo "<script>alert('Modification réussie')";
-                	echo "window.location.href = 'index.php';</script>";
+                	echo "<script>alert('Modification réussie'); setTimeout(() => { window.location.href = 'index.php'; }, 1000);</script>";
+                	
                }
 }
 

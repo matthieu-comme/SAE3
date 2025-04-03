@@ -1,10 +1,10 @@
 <header>
     <h1>Chris Kindle</h1>
     <a href="index.php">Accueil</a>
-    <a href="page1.php">Page 1</a>
-    <a href="page2.php">Page 2</a>
-    <a href="historique.php">Historique</a>
+    <a href="historique.php">Historique</a> 
+    <a href="search.php">Recherche avancée</a>      
     <p>Salutations, <?php echo htmlspecialchars($_SESSION['pseudo']); ?></p>    
+    <a href="profil.php">Profil</a>
     <form method="POST" action="" onsubmit="return confirm('Voulez-vous vraiment vous déconnecter ?');">
     <input type="submit" name="deco" value="Déconnexion" >    
     </form>
@@ -20,6 +20,8 @@ header {
     font-family: Arial, sans-serif;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     border-radius: 0 0 15px 15px;
+    height: 5vh;
+    max-height: 5vh;
 }
 
 header h1 {

@@ -15,10 +15,7 @@ $idcom = connexoci("inc/myparam");
 </head>
 
 <body>
-	<?php include('inc/header.php'); 
-	echo hash('sha256', 'MDP1').'<br>';
-	echo hash('sha256', 'MDP2')?>
-	
+	<?php include('inc/header.php');?>	
     <main>
     <nav>
     <form method="GET" action="">
@@ -48,7 +45,7 @@ $idcom = connexoci("inc/myparam");
             </form>
             </nav>
     <?php 
-    if(isset($_POST['submit']) && $_POST['submit'] == 'Insert') {
+    if(isset($_POST['submit']) && $_POST['submit'] == 'Ajouter') {
     	var_dump($_POST);
     	foreach($_POST as $key => $value) {
 	    		$value = filterString($value);
@@ -104,7 +101,7 @@ $idcom = connexoci("inc/myparam");
             oci_free_statement($stid);
             ?>
 	    	<form method="POST" action="">
-	    	    <h1>Insert dans <?php echo $_GET["table"]; ?></h1>
+	    	    <h1>Insérer dans <?php echo $_GET["table"]; ?></h1>
 		 <?php 
 		    $fkarr = getForeignKeys($idcom, $_GET['table']);
       		foreach ($cols as $row) {
@@ -114,7 +111,7 @@ $idcom = connexoci("inc/myparam");
 				createInput($row);
 		}
       	?>                <input type="hidden" name="table" value="<?php echo $_GET["table"];?>"/>
-		    <input type="submit" name="submit" value="Insert">
+		    <input type="submit" name="submit" value="Ajouter">
 		</form>
 		<?php
         }

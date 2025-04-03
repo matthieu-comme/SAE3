@@ -7,6 +7,8 @@ require_once('inc/functions.php');
 
 <head>
     <title>Historique - Chris Kindle</title>
+    <link href="style/gpt.css" rel="stylesheet"> 
+    <meta charset='utf-8'>
 </head>
 
 <body>
@@ -31,20 +33,10 @@ require_once('inc/functions.php');
 		return;
 	}
 	?>
-	<table class="sortTable" id="historique" border="1">	
-	<thead><tr>
-		<th>Date</th>
-		<th>Admin</th>
-		<th>Requête</th>
-	</tr></thead>
-	<tbody>
 	<?php
-	while($line = fgets($fichier)) {
-		$temp = explode(';', $line);
-		echo '<tr><td>'.$temp[0].'</td><td>'.$temp[1].'</td><td>'.$temp[2]."</td></tr>\n";
+	while($line = fgets($fichier)) 
+		$arr[] = explode(';;;', $line);
 		
-	}
-	echo '</tbody></table>';
 	if(!flock($fichier,3)) {
 		echo "erreur de deverrouillage";
 		return;
@@ -52,7 +44,8 @@ require_once('inc/functions.php');
 	if(!fclose($fichier)) {
 		echo "erreur lors de la fermeture du fichier";
 		return;
-	} ?>
+	}
+	echoTable($arr, 'sortTable', 'historique'); ?>
     </main>
     <script src="scripts/sortTable.js"></script>
     <script src="scripts/searchTable.js"></script>

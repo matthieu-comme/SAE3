@@ -1,6 +1,6 @@
 <?php
-function echoTable2D($stid, $table) {	
-	echo '<table class=”sortable” border="1">'."\n";
+function echoTableOCI($stid, $table='') { 
+	echo '<table class=”sortTable” border="1">'."\n";
 	$nb_col = oci_num_fields($stid);
 	echo "<thead>\n<tr>";
 	for ($i = 1; $i <= $nb_col; $i++) {
@@ -22,22 +22,35 @@ function echoTable2D($stid, $table) {
 	}
 	echo "</tbody>\n</table>\n";
 }
-
-function echoDeleteTable($stid) {	
-	echo '<table class=”” border="1">';
-	$nb_col = oci_num_fields($stid);
+function echoTableFetchAll($arr, $class = '', $id = '') { // arr est la sortie d'un oci_fetch_all avec OCI_FETCHSTATEMENT_BY_ROW
+	echo '<table class="'.$class.'" id="'.$id.'" border="1">';
+	$nb_col = count($arr[0]);
+	echo "<thead>\n<tr>";
+	foreach ($arr[0] as $attr => $k) {
+        		echo '<th>'. $attr.'</th>';
+    	}
+	foreach ($arr as $attr => $k) {
+		echo '<tr>';
+		foreach($k as $value) 
+			echo "<td>$value</td>";
+		echo '</tr>';
+	}
+	echo "</tbody>\n</table>\n";
+}
+function echoTable($arr, $class = '', $id = '') { // entete du tableau = $arr[0]
+	echo '<table class="'.$class.'" id="'.$id.'" border="1">';
+	$nb_col = count($arr[0]);
+	$nb_li = count($arr);
 	echo '<thead><tr>';
-	for ($i = 1; $i <= $nb_col; $i++) {
-  		$nom = oci_field_name($stid, $i);
+	for ($i = 0; $i < $nb_col; $i++) {
+  		$nom = $arr[0][$i];
         		echo '<th>'. $nom.'</th>';
     	}
-    	echo '<th>Action</th>';
     	echo '</tr></thead><tbody>';
-	while ($row = oci_fetch_array($stid, OCI_ASSOC+OCI_RETURN_NULLS)) {
+	for ($i = 1; $i < $nb_li; $i++) {
 		echo "<tr>\n";
-		foreach ($row as $item) 
-			echo "<td>" . ($item !== null ? htmlentities($item, ENT_QUOTES) : "") . "</td>\n";
-		echo "<td><a>Supprimer</a></td>";
+		foreach ($arr[$i] as $value) 
+			echo "<td>" . ($value !== null ? htmlentities($value, ENT_QUOTES) : "") . "</td>\n";
 		echo "</tr>\n";
 	}
 	echo '</tbody></table>';
@@ -64,13 +77,13 @@ function getKeys($idcom, $requete) {
         	oci_fetch_all($stid, $arr);
         	return $arr;
 }
-function getPrimaryKeys($idcom, $table) {
+function getPrimaryKeys($idcom, $table) { // retourne le nom des clés primaires de table
 	$requete = "SELECT cols.column_name FROM all_constraints cons, all_cons_columns cols WHERE cols.table_name = '".strtoupper($table)."' AND cons.constraint_type = 'P' AND cons.constraint_name = cols.constraint_name AND cons.owner = cols.owner ORDER BY cols.table_name, cols.position";
 	$arr = getKeys($idcom, $requete);
 	return $arr['COLUMN_NAME'];
 }
 
-function getForeignKeys($idcom, $table) {
+function getForeignKeys($idcom, $table) { // pareil pour les fk
 	$requete = "SELECT UCC2.COLUMN_NAME AS FK, UCC.TABLE_NAME, UCC.COLUMN_NAME FROM (SELECT TABLE_NAME, CONSTRAINT_NAME, R_CONSTRAINT_NAME, CONSTRAINT_TYPE FROM USER_CONSTRAINTS) UC,       (SELECT TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME FROM USER_CONS_COLUMNS) UCC, (SELECT TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME FROM USER_CONS_COLUMNS) UCC2 WHERE UC.R_CONSTRAINT_NAME = UCC.CONSTRAINT_NAME AND UC.CONSTRAINT_NAME = UCC2.CONSTRAINT_NAME AND uc.constraint_type = 'R' AND UC.TABLE_NAME = '".strtoupper($table)."'";
 	return getKeys($idcom, $requete);       		
 }
@@ -116,7 +129,7 @@ function createInput($row) // row = une ligne du tableau cols
 	echo "<br>\n";
 }
 
-function createFKInput($row, $fkarr, $idcom) {
+function createFKInput($row, $fkarr, $idcom) { // cree select pour cle etrangere
 	$name = $row['name'];
 	$size = $row['size'];
 	$i = array_search($name, $fkarr['FK']);
@@ -140,7 +153,7 @@ function createFKInput($row, $fkarr, $idcom) {
 	}
 	echo "</select><br>\n";
 }
-function displayError($e) {
+function displayError($e) { // affiche message d'erreur
 	$msg = $e['message'];
 	var_dump($msg);
 	$arr = preg_split('/[:(]/', trim($msg));
@@ -148,12 +161,13 @@ function displayError($e) {
 	echo $s;
 	
 }
-function filterString($s) {
+function filterString($s) { // retourne la chaine filtrée
+	$s = trim($s);
 	$s = preg_replace("/[;']/",'', $s);
 	$s = filter_var($s, FILTER_SANITIZE_SPECIAL_CHARS);
 	return $s;
 }
-function filterArray($arr) {
+function filterArray($arr) { // retourne le tableau filtré
 	foreach($arr as $key => $value) {
 		$key = filterString($key);
 		$value = filterString($value);
@@ -161,7 +175,7 @@ function filterArray($arr) {
 	}
 	return $res;
 }
-function addHistorique($requete, $pseudo) {
+function addHistorique($requete, $pseudo) { // ajoute la requete à l'historique
 	if (!file_exists("historique.txt")) {
 	echo "Je ne trouve pas l'historique...";
 	return;
@@ -175,7 +189,7 @@ function addHistorique($requete, $pseudo) {
 		echo "erreur de verrouillage mode 2";
 		return;
 	}
-	$ligne = date("Y-m-d H:i:s").';'.$pseudo.';'. $requete."\n";
+	$ligne = date("Y-m-d H:i:s").';;;'.$pseudo.';;;'. $requete."\n";
 	if(!fwrite($fichier, $ligne)) {
 		echo "erreur lors de l'ecriture";
 		return;
