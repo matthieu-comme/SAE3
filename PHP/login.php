@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (isset($_POST['pseudo']) && isset($_POST['mdp'])) {
+if (isset($_POST['pseudo']) && isset($_POST['mdp'])) { // si tentative de connexion
     if (empty($_POST['pseudo']) || empty($_POST['mdp']))
         $message = "Veuillez remplir tous les champs<br>";
     else {
@@ -10,19 +10,18 @@ if (isset($_POST['pseudo']) && isset($_POST['mdp'])) {
         $pseudo = filterString($_POST['pseudo']);
         $mdp = filterString($_POST['mdp']);
         $hashmdp = hash('sha256', $mdp);
-        $requete = "SELECT * FROM Lutin WHERE pseudo = '".$pseudo."'";
-        $stid = oci_parse($idcom, $requete);
-        if(!$stid) echo 'Erreur lors de la préparation de requête';
-        $r = oci_execute($stid);
-        if(!$r) echo 'Erreur lors de l\'execution de la requête';
+        $requete = "SELECT * FROM Lutin WHERE pseudo = '" . $pseudo . "'";
+        $stid = oci_requete($idcom, $requete);
+        if ($stid) {
             $message = "";
             $result = oci_fetch_array($stid, OCI_ASSOC);
-            if ($result['PSEUDO'] !== $pseudo || $result['MDP'] !== $hashmdp) 
-            	$message .=  "<strong>Pseudo ou mot de passe incorrect</strong><br>";
-            else {
-            	$_SESSION['pseudo'] = $pseudo;
-            	header('Location: index.php');    
+            if ($result['PSEUDO'] !== $pseudo || $result['MDP'] !== $hashmdp) // echec de connexion
+                $message .=  "<strong>Pseudo ou mot de passe incorrect</strong><br>";
+            else { // connexion et redirection
+                $_SESSION['pseudo'] = $pseudo;
+                header('Location: index.php');
             }
+        }
     }
 } ?>
 <!DOCTYPE HTML>
@@ -30,7 +29,8 @@ if (isset($_POST['pseudo']) && isset($_POST['mdp'])) {
 
 <head>
     <title>Connexion - Chris Kindle</title>
-    <link rel="stylesheet" href="style/login.css"
+    <link rel="stylesheet" href="style/login.css">
+    <meta charset='utf-8'>
 </head>
 
 <body>
@@ -42,9 +42,9 @@ if (isset($_POST['pseudo']) && isset($_POST['mdp'])) {
                 <label for="mdp">Mot de passe</label> <input type="password" name="mdp" required></input><br>
                 <input type="submit" name="submit" value="Se connecter">
             </form>
-            <?php if (!empty($message)) echo '<p id="message">'.$message.'</p>'; ?>
+            <?php if (!empty($message)) echo '<p id="message">' . $message . '</p>'; ?>
         </div>
-        
+
     </main>
 </body>
 
