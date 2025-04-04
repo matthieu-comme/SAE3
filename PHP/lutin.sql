@@ -1,7 +1,0 @@
-CREATE TABLE Lutin ( 
-pseudo VARCHAR(16),
-mdp CHAR(64),
-CONSTRAINT pk_user PRIMARY KEY(pseudo));
-
-INSERT INTO Lutin VALUES('lutin1','1de1585caa3033dac9e9fe27b079c5ca10563ffd0ea3facf3bb1ffee73752156');
-INSERT INTO Lutin VALUES('lutin2','394c3e1b9e1e470bae59dd427c487bb7ac77a2af2e44cc0e77c8503d695213c8');
