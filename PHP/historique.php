@@ -9,6 +9,7 @@ require_once('inc/functions.php');
     <title>Historique - Chris Kindle</title>
     <link href="style/gpt.css" rel="stylesheet"> 
     <meta charset='utf-8'>
+         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -17,10 +18,10 @@ require_once('inc/functions.php');
 	<div>
   <input class="searchInput" data-table-id="historique" type="search" placeholder="Rechercher" aria-label="Search"
     aria-target="historique">
-</div>
+
 	<?php 
 	if (!file_exists("historique.txt")) {
-	echo "Je ne trouve pas l'historique...";
+	echo '<p class="error">Je ne trouve pas l\'historique...';
 	return;
 	}
 	$fichier = fopen("historique.txt","r");
@@ -34,6 +35,7 @@ require_once('inc/functions.php');
 	}
 	?>
 	<?php
+	$arr[0] = ['Date (UTC)', 'Admin', 'Table', 'Action', 'Détails'];
 	while($line = fgets($fichier)) 
 		$arr[] = explode(';;;', $line);
 		
@@ -45,8 +47,12 @@ require_once('inc/functions.php');
 		echo "erreur lors de la fermeture du fichier";
 		return;
 	}
-	echoTable($arr, 'sortTable', 'historique'); ?>
+	//echo '<div>';
+	echoTable($arr, 'sortTable', 'historique');
+	//echo '</div>'; ?>
+	</div>
     </main>
+    <?php include_once('inc/footer.php');?>
     <script src="scripts/sortTable.js"></script>
     <script src="scripts/searchTable.js"></script>
 </body>

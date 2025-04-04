@@ -1,10 +1,15 @@
 <header>
+	<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
     <h1>Chris Kindle</h1>
     <a href="index.php">Accueil</a>
     <a href="historique.php">Historique</a> 
-    <a href="search.php">Recherche avancée</a>      
+    <a href="search.php">Recherche avancée</a>  
+    <div style="display:flex; flex-direction: row; gap: 20px;">    
     <p>Salutations, <?php echo htmlspecialchars($_SESSION['pseudo']); ?></p>    
-    <a href="profil.php">Profil</a>
+    
+    <a href="profil.php"><i class="fa fa-id-card"></i>Profil</a>
+   </div>
     <form method="POST" action="" onsubmit="return confirm('Voulez-vous vraiment vous déconnecter ?');">
     <input type="submit" name="deco" value="Déconnexion" >    
     </form>
@@ -65,6 +70,15 @@ header input[type="submit"] {
 header input[type="submit"]:hover {
     background: #ffeb99;
     color: #ff7b00;
+}
+
+.error {
+	color: red;
+	font-weight: bold;
+}
+.msg {
+	color: green;
+	font-weight: bold;
 }
 
 </style>

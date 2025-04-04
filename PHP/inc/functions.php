@@ -1,6 +1,6 @@
 <?php
 function echoTableOCI($stid, $table='') { 
-	echo '<table class=”sortTable” border="1">'."\n";
+	echo '<table class="sortTable" id="'.$table.'_table" border="1">'."\n";
 	$nb_col = oci_num_fields($stid);
 	echo "<thead>\n<tr>";
 	for ($i = 1; $i <= $nb_col; $i++) {
@@ -55,6 +55,27 @@ function echoTable($arr, $class = '', $id = '') { // entete du tableau = $arr[0]
 	}
 	echo '</tbody></table>';
 }
+
+function echoSelectNav($idcom) {
+	$requete = "SELECT table_name FROM user_tables WHERE table_name <> 'LUTIN' ORDER BY table_name";
+                $stid = oci_requete($idcom, $requete);
+                if ($stid) { ?>
+	    <form method="GET" action="">
+                <fieldset>
+                <select name="table">
+                <?php
+                               
+		    while ($row = oci_fetch_array($stid)) {
+		        echo "<option value='".$row[0] ."'>" .$row[0] ."</option>";
+		    }
+                }
+                
+                ?>
+                </select>
+                <input type="submit" name="submit" value="Choisir">
+                </fieldset>
+    </form> 
+<?php }
 
 function getColsInfo($stid) {
 	$nbcols = oci_num_fields($stid);
@@ -111,7 +132,7 @@ function createInput($row) // row = une ligne du tableau cols
 	$name = $row['name'];
 	$size = $row['size'];
 	$type = $row['type'];
-	echo '<label for="'.$name.'">'."$type longueur=$size $name : ".'</label>';
+	echo '<div><label for="'.$name.'">'."$name : ".'</label>';
 	switch($type) {
 		case 'NUMBER':
 			echo '<input type="number" name="'.$name.'">';			
@@ -126,7 +147,9 @@ function createInput($row) // row = une ligne du tableau cols
 			echo '<input type="date" name="'.$name.'">';
 			break;
 	}
-	echo "<br>\n";
+	echo "<br><i>$type";
+	if($type === 'VARCHAR2' || $type === 'CHAR') echo " longueur=$size";
+	echo "</i><br></div><br>\n";
 }
 
 function createFKInput($row, $fkarr, $idcom) { // cree select pour cle etrangere
@@ -155,12 +178,32 @@ function createFKInput($row, $fkarr, $idcom) { // cree select pour cle etrangere
 }
 function displayError($e) { // affiche message d'erreur
 	$msg = $e['message'];
-	var_dump($msg);
 	$arr = preg_split('/[:(]/', trim($msg));
 	$s = preg_replace('/".*"\./','', $arr[1]);
 	echo $s;
 	
 }
+
+function oci_requete($idcom, $requete) {
+	$stid = oci_parse($idcom, $requete);
+                if (!$stid) {
+                    echo '<p class="error">Erreur lors de la préparation de requête';
+                    $e = oci_error();
+                    displayError($e);
+                    echo '</p>';
+                    return false;
+                }
+                $r = oci_execute($stid);
+                if (!$r) {
+                    echo '<p class="error">Erreur lors de l\'execution de la requête : ';
+                    $e = oci_error($stid);
+                    displayError($e);
+                    echo '</p>';
+                    return false;
+                }
+                return $stid;
+}
+
 function filterString($s) { // retourne la chaine filtrée
 	$s = trim($s);
 	$s = preg_replace("/[;']/",'', $s);
@@ -175,7 +218,7 @@ function filterArray($arr) { // retourne le tableau filtré
 	}
 	return $res;
 }
-function addHistorique($requete, $pseudo) { // ajoute la requete à l'historique
+function addHistorique($table, $action, $infos) { // ajoute la requete à l'historique
 	if (!file_exists("historique.txt")) {
 	echo "Je ne trouve pas l'historique...";
 	return;
@@ -189,7 +232,8 @@ function addHistorique($requete, $pseudo) { // ajoute la requete à l'historique
 		echo "erreur de verrouillage mode 2";
 		return;
 	}
-	$ligne = date("Y-m-d H:i:s").';;;'.$pseudo.';;;'. $requete."\n";
+	global $_SESSION;
+	$ligne = date("Y-m-d H:i:s").';;;'.$_SESSION['pseudo'].';;;'. $table.';;;'. $action.';;;'. $infos."\n";
 	if(!fwrite($fichier, $ligne)) {
 		echo "erreur lors de l'ecriture";
 		return;

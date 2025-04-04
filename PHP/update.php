@@ -14,8 +14,29 @@ if(isset($_GET['table'])) {
 		$where[]="$key='$arr[$key]'";
 	$whereString = implode(' AND ', $where);
 }
-else header('Location: index.php');
-if(isset($_POST['table'])) {
+else 
+	header('Location: index.php');
+
+
+?>
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>Update - Chris Kindle</title>
+             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+             <link rel="stylesheet" href="style/gpt.css">
+</head>
+
+<body>
+	<?php include('inc/header.php'); ?>	
+    <main>
+    	<div id='update_form'>
+	<form method="POST" action="">
+	<fieldset>
+	<legend>UPDATE</legend>
+	<?php
+	if(isset($_POST['table'])) {
 	$_POST = filterArray($_POST);
 	$table = $_POST['table'];
 	unset($_POST['table']);
@@ -26,37 +47,14 @@ if(isset($_POST['table'])) {
 	}
 	$s = implode(', ', $updatearray);
 	$requete = 'UPDATE '.$table.' SET '. $s . ' WHERE '.$whereString ;
-	$stid = oci_parse($idcom, $requete);
-                if (!$stid) {
-                    echo "Erreur lors de la préparation de requête";
-                    $e = oci_error();
-                    displayError($e);
-                }
-                $r = oci_execute($stid);
-                if (!$r) {
-                    echo 'Erreur lors de l\'execution de la requête : ';
-                    $e = oci_error($stid);
-                    displayError($e);
-                }
-                else {
-                	addHistorique($requete);
-                	echo "<script>alert('Modification réussie'); setTimeout(() => { window.location.href = 'index.php'; }, 1000);</script>";
-                	
-               }
+	$stid = oci_requete($idcom, $requete);
+                if ($stid) {
+                addHistorique($table, 'Modifier', $s . ' WHERE '.$whereString );
+                echo '<p class="msg">Modification réussie. Redirection en cours...</p>';
+    	    echo "<meta http-equiv='refresh' content='2;url=index.php'>";
+                }            
 }
-
-?>
-<!DOCTYPE HTML>
-<html>
-
-<head>
-    <title>Update - Chris Kindle</title>
-</head>
-
-<body>
-	<?php include('inc/header.php'); ?>	
-    <main>
-	<form method="POST" action="">
+	?>
 	<input type="hidden" name="table" value="<?php echo $table; ?>">
 	<?php
 	foreach($arr as $key => $value) {		
@@ -65,13 +63,17 @@ if(isset($_POST['table'])) {
 		}
 		else {
 			echo '<label for="'.$key.'">'.$key.': </label>';
-			echo '<input type=text name="'.$key.'"placeholder="'.$value.'"><br>';
+			echo '<input type=text name="'.$key.'" id="'.$key.'" placeholder="'.$value.'"><br>';
 		}
 	}
 	?>
 	<input type="submit" name="" value="Modifier">
+	</fieldset>
 	</form>
+	</div>
+	
     </main>
+    <?php include_once('inc/footer.php');?>
 </body>
 
 </html>

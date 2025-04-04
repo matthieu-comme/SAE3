@@ -20,11 +20,10 @@ $idcom = connexoci("inc/myparam");
 		<ul>	
        		<?php 
 	           	$requete = "SELECT table_name FROM user_tables WHERE UPPER(table_name) <> 'LUTIN' ORDER BY table_name";
-		$stid = oci_parse($idcom, $requete);
-		if(!$stid) echo 'Erreur lors de la préparation de requête';
-		$r = oci_execute($stid);
-		if(!$r) echo 'Erreur lors de l\'execution de la requête';
-		while ($row = oci_fetch_array($stid)) {
+		$stid = oci_requete($idcom, $requete);
+            	if ($stid) {
+            	
+            	while ($row = oci_fetch_array($stid)) {
 			$name = $row[0];
 			$tablenames[] = $name;?>
 			<div class="nav_table">
@@ -43,23 +42,25 @@ $idcom = connexoci("inc/myparam");
    	 	<?php
    	 	foreach($tablenames as $table) {
    	 		$requete = "SELECT * FROM $table";
-			$stid = oci_parse($idcom, $requete);
-			if(!$stid) echo 'Erreur lors de la préparation de requête';
-			$r = oci_execute($stid);
-			if(!$r) echo 'Erreur lors de l\'execution de la requête';
+			$stid = oci_requete($idcom, $requete);
+            		if ($stid) {
+            	
 			echo '<div class="table" id="'.$table.'">'."\n";
 			echo '<input class="searchInput" data-table-id="'.$table.'" type="search" placeholder="Rechercher" aria-label="Search"
+
     aria-target="'.$table.'">';
 			echoTableOCI($stid, $table);
 			echo '</div>';
+			}
    	 	}
    	 	?>
-   	 </section>           
+   	 </section> 
+               
+               <?php } ?>
+		          
    	 </main>
    	 
-   	 <footer>
-   	 	<p>footer</p>
-   	 <footer>
+   	 <?php include_once('inc/footer.php');?>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="scripts/index.js"></script>  
     <script src="scripts/sortTable.js"></script>

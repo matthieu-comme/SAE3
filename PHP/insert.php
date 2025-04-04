@@ -11,42 +11,18 @@ $idcom = connexoci("inc/myparam");
 
 <head>
     <title>Insertion - Chris Kindle</title>
-    <link href="style/insert.css" rel="stylesheet">
+    <link href="style/gpt.css" rel="stylesheet">
+                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+            
+ 
 </head>
 
 <body>
 	<?php include('inc/header.php');?>	
     <main>
-    <nav>
-    <form method="GET" action="">
-                <h3>Choix de la table</h3>
-                <select name="table">
-                <?php
-                $requete =
-                    "SELECT table_name FROM user_tables WHERE table_name <> 'LUTIN' ORDER BY table_name";
-                $stid = oci_parse($idcom, $requete);
-                if (!$stid) {
-                    echo "Erreur lors de la préparation de requête";
-                }
-                $r = oci_execute($stid);
-                if (!$r) {
-                    echo 'Erreur lors de l\'execution de la requête';
-                }
-                while ($row = oci_fetch_array($stid)) {
-                    echo "<option value='" .
-                        $row[0] .
-                        "'>" .
-                        $row[0] .
-                        "</option>";
-                }
-                ?>
-                </select>
-                <input type="submit" name="submit" value="Choisir">
-            </form>
-            </nav>
+	<div class="flex_column">
     <?php 
     if(isset($_POST['submit']) && $_POST['submit'] == 'Ajouter') {
-    	var_dump($_POST);
     	foreach($_POST as $key => $value) {
 	    		$value = filterString($value);
 	    		$key = filterString($key);
@@ -65,43 +41,27 @@ $idcom = connexoci("inc/myparam");
     	$attributs =implode(', ', array_keys($insert));
     	$valeurs =  implode(", ", $insert);
     	$requete = 'INSERT INTO '.$table.' ('.$attributs.') VALUES ('.$valeurs.')';
-    	echo $requete.'<br>';
-    	$stid = oci_parse($idcom, $requete);
-                if (!$stid) {
-                    echo "Erreur lors de la préparation de requête";
-                    $e = oci_error();
-                    displayError($e);
-                }
-                $r = oci_execute($stid);
-                if (!$r) {
-                    echo 'Erreur lors de l\'execution de la requête : ';
-                    $e = oci_error($stid);
-                    displayError($e);
-                }
-                else {
-                	echo 'Insertion réussie';
-                	addHistorique($requete, $_SESSION['pseudo']);
-                }
+    	$stid = oci_requete($idcom, $requete);
+            if ($stid) {
+                $msg = '<p class="msg">Insertion réussie</p>';
+                addHistorique($table, 'Ajouter', "($attributs) VALUES ($valeurs)");
+               }
     } 
     
         if (isset($_GET["table"]) && strcasecmp(trim($_GET["table"]), 'lutin')) {
         $requete = "SELECT * FROM " . $_GET["table"];
-        $stid = oci_parse($idcom, $requete);
-        if (!$stid) {
-            echo "Erreur lors de la préparation de requête : ";
-        }
-        $r = oci_execute($stid);
-        if (!$r) {
-            echo 'Erreur lors de l\'execution de la requête';
-            //return;
-        } else {
+        $stid = oci_requete($idcom, $requete);
+            if ($stid) {
 
             $cols = getColsInfo($stid);
-            //echoTable2D($stid);
             oci_free_statement($stid);
             ?>
+            
+            <?php if($msg) echo $msg; ?>
+            	 <h1>Insérer dans <?php echo $_GET["table"]; ?></h1>
 	    	<form method="POST" action="">
-	    	    <h1>Insérer dans <?php echo $_GET["table"]; ?></h1>
+
+	    	    <fieldset>
 		 <?php 
 		    $fkarr = getForeignKeys($idcom, $_GET['table']);
       		foreach ($cols as $row) {
@@ -112,12 +72,19 @@ $idcom = connexoci("inc/myparam");
 		}
       	?>                <input type="hidden" name="table" value="<?php echo $_GET["table"];?>"/>
 		    <input type="submit" name="submit" value="Ajouter">
+		    </fieldset>
 		</form>
 		<?php
         }
     } ?>     	     		
-            
+        
+         <section>
+         <h3>Insérer dans une autre table</h3>
+    	<?php echoSelectNav($idcom); ?>
+    </section>  
+    </div>  
     </main>
+    <?php include_once('inc/footer.php');?>
 </body>
 
 </html>
