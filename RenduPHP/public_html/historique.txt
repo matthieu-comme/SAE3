@@ -1,0 +1,24 @@
+2025-04-04 11:00:45;;;LUTIN1;;;ACTIVITE;;;Ajout;;;
+2025-04-04 11:01:14;;;LUTIN1;;;CLIENT;;;Ajout;;;(IDC, NOM, PRENOM, VILLE, SOLDE) VALUES ('c124', 'papapa', 'mamamama', 'tototo', '1111'
+2025-04-04 11:02:59;;;LUTIN1;;;CLIENT;;;Suppression;;;IDC = c124
+2025-04-04 11:14:05;;;LUTIN1;;;ELFE;;;Modifier;;;NOM_ELFE='slslslls' WHERE ID_ELFE='1123'
+2025-04-04 11:16:15;;;LUTIN1;;;CLIENT;;;Ajouter;;;(IDC, NOM, PRENOM, VILLE, SOLDE) : ('TOTO', 'monsieur', 'toto', 'totoville', '007')
+2025-04-04 11:16:50;;;LUTIN1;;;CLIENT;;;Modifier;;;NOM='madame', VILLE='toto-city' pour le tuple IDC='TOTO'
+2025-04-04 11:17:04;;;LUTIN1;;;CLIENT;;;Supprimer;;;Tuple IDC = TOTO
+2025-04-04 13:00:53;;;LUTIN1;;;ACTIVITE;;;Supprimer;;;IDA = 123
+2025-04-04 13:02:06;;;LUTIN1;;;ACTIVITE;;;Supprimer;;;IDA = pip
+2025-04-04 13:06:31;;;LUTIN1;;;ACTIVITE;;;Supprimer;;;IDA = 333
+2025-04-04 13:06:51;;;LUTIN1;;;ACTIVITE;;;Supprimer;;;IDA = aaa
+2025-04-04 13:07:34;;;LUTIN1;;;ELFE;;;Supprimer;;;ID_ELFE = 11111
+2025-04-04 13:07:52;;;LUTIN1;;;ELFE;;;Supprimer;;;ID_ELFE = 12345
+2025-04-04 13:08:20;;;LUTIN1;;;CLIENT;;;Ajouter;;;(IDC, NOM, PRENOM, VILLE, SOLDE) VALUES ('1111', 'dsqd', 'dqsd', 'dsqdqs', '9')
+2025-04-04 13:09:35;;;LUTIN1;;;CLIENT;;;Ajouter;;;(IDC, NOM, PRENOM, VILLE, SOLDE) VALUES ('1349', 'dsdqsq', 'papapa', 'msmsnq', '-910')
+2025-04-04 13:09:55;;;LUTIN1;;;CLIENT;;;Modifier;;;VILLE='prout-city' WHERE IDC='c145'
+2025-04-04 13:12:07;;;LUTIN1;;;CLIENT;;;Modifier;;;SOLDE='-99' WHERE IDC='c999'
+2025-04-04 13:12:57;;;LUTIN1;;;ELFE;;;Supprimer;;;ID_ELFE = 1123
+2025-04-04 13:21:40;;;lutin1;;;ENFANT;;;Supprimer;;;ID_ENFANT = 1111
+2025-04-04 13:27:28;;;lutin1;;;CLIENT;;;Supprimer;;;IDC = fsdf
+2025-04-04 13:38:54;;;lutin1;;;CLIENT;;;Supprimer;;;IDC = c999
+2025-04-04 13:39:58;;;lutin1;;;CLIENT;;;Supprimer;;;IDC = c999
+2025-04-04 13:40:15;;;lutin1;;;CLIENT;;;Supprimer;;;IDC = c009
+2025-04-04 14:35:11;;;lutin1;;;CLIENT;;;Supprimer;;;IDC = c010
